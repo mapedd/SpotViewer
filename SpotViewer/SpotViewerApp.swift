@@ -8,11 +8,7 @@ struct SpotViewerApp: App {
     WindowGroup {
       NavigationStack {
         SpotRootView(
-          viewModel:TokenListViewModel(
-            fetcher: TokenFetching.defaultFetcher(),
-            currencyCode: .usd,
-            locale: .autoupdatingCurrent
-          )
+          viewModel: TokenListViewModel.makeViewModel()
         )
       }
     }

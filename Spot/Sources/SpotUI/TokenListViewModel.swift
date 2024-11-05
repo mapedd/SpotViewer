@@ -20,9 +20,7 @@ public class TokenListViewModel: TokenListViewModelProtocol {
   
   public init(
     fetcher: some TokenFetcher,
-    currencyCode: CurrencyCode,
-    mapper: some TokenRowMapping,
-    locale: Locale
+    mapper: some TokenRowMapping
   ) {
     self.fetcher = fetcher
     self.mapper = mapper
