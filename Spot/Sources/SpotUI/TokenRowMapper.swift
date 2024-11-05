@@ -5,11 +5,15 @@ public enum CurrencyCode: String {
   case usd = "USD"
 }
 
-struct TokenRowMapper {
+public protocol TokenRowMapping {
+  func mapToRow(token: Token) -> TokenRow
+}
+
+public struct TokenRowMapper: TokenRowMapping {
   var currencyCode: CurrencyCode
   var locale: Locale
   
-  func mapToRow(token: Token) -> TokenRow {
+  public func mapToRow(token: Token) -> TokenRow {
     TokenRow(
       imageURL: token.logoURI,
       name: token.name.isEmpty ? "N/A" : token.name,

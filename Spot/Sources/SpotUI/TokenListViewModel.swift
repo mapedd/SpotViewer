@@ -15,19 +15,17 @@ public enum ContentState {
 @Observable
 public class TokenListViewModel: TokenListViewModelProtocol {
   private let fetcher: any TokenFetcher
-  private let mapper: TokenRowMapper
+  private let mapper: any TokenRowMapping
   private let logger = Logger(subsystem: "com.spot.viewer", category: "tokenList")
   
   public init(
     fetcher: some TokenFetcher,
     currencyCode: CurrencyCode,
+    mapper: some TokenRowMapping,
     locale: Locale
   ) {
     self.fetcher = fetcher
-    self.mapper = TokenRowMapper(
-      currencyCode: currencyCode,
-      locale: locale
-    )
+    self.mapper = mapper
   }
   
   public private(set) var content: ContentState = .initial
@@ -53,6 +51,7 @@ public class TokenListViewModel: TokenListViewModelProtocol {
   }
   
   private func loadData() async {
+    content = .loading
     do {
       let response = try await fetcher.fetchTokens()
       let rows = response.tokens.map(mapper.mapToRow)

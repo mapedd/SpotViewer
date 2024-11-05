@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "F696F402-7795-4BB9-B31C-5C1675C7644E",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SpotUITests",
+        "name" : "SpotUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SpotTests",
+        "name" : "SpotTests"
+      }
+    }
+  ],
+  "version" : 1
+}

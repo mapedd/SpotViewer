@@ -1,6 +1,6 @@
 import Foundation
 
-public struct TokenRow: Identifiable, Sendable {
+public struct TokenRow: Identifiable, Sendable, Equatable {
   public var id: String {
     // assuming that symbol is unique in the backend
     symbol

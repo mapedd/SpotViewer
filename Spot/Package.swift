@@ -3,6 +3,20 @@
 
 import PackageDescription
 
+extension [Resource] {
+  static let testResources: [Resource] = [
+    .copy("data.json"),
+    .copy("data_single.json")
+  ]
+}
+
+extension [SwiftSetting] {
+  static let swiftSettings: [SwiftSetting] = [
+    .enableExperimentalFeature("ExistentialAny"),
+    .swiftLanguageMode(.v6)
+  ]
+}
+
 let package = Package(
   name: "Spot",
   platforms: [.iOS(.v18)],
@@ -15,10 +29,14 @@ let package = Package(
       name: "SpotUI",
       targets: ["SpotUI"]
     ),
+    .library(
+      name: "SpotTestData",
+      targets: ["SpotTestData"]
+    )
   ],
   dependencies: [
     .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "3.1.2"),
-    .package(url: "https://github.com/apple/swift-http-types.git", from: "1.3.0")
+    .package(url: "https://github.com/apple/swift-http-types.git", branch: "main")
   ],
   targets: [
     .target(
@@ -26,10 +44,12 @@ let package = Package(
       dependencies: [
         .product(name: "HTTPTypes", package: "swift-http-types")
       ],
-      swiftSettings: [
-        .enableExperimentalFeature("ExistentialAny"),
-        .swiftLanguageMode(.v6)
-      ]
+      swiftSettings: .swiftSettings
+    ),
+    .target(
+      name: "SpotTestData",
+      dependencies: [],
+      resources: .testResources
     ),
     .target(
       name: "SpotUI",
@@ -37,18 +57,15 @@ let package = Package(
         "Spot",
         .product(name: "SDWebImageSwiftUI", package: "sdwebimageswiftui")
       ],
-      swiftSettings: [
-        .enableExperimentalFeature("ExistentialAny"),
-        .swiftLanguageMode(.v6)
-      ]
+      swiftSettings: .swiftSettings
     ),
     .testTarget(
       name: "SpotTests",
-      dependencies: ["Spot"],
-      resources: [
-        .copy("data.json"),
-        .copy("data_single.json")
-      ]
+      dependencies: ["Spot", "SpotTestData"]
     ),
+    .testTarget(
+      name: "SpotUITests",
+      dependencies: ["Spot", "SpotUI", "SpotTestData"]
+    )
   ]
 )
