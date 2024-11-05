@@ -29,18 +29,37 @@ public struct SpotRootView: View {
   private var content: some View {
     switch viewModel.content {
     case .initial:
-      ContentUnavailableView("Hello", image: "bitcoinsign")
+      ProgressView()
     case .loading:
       ProgressView()
     case .empty:
-      ContentUnavailableView("No tokens", image: "bitcoinsign.arrow.circlepath")
-    case .failed(_):
-      ContentUnavailableView(
-        "Can't load tokens, please try again",
-        image: "bitcoinsign.arrow.circlepath"
-      )
+      noContent(nil)
+    case .failed(let error):
+      noContent(error)
     case .loaded(rows: let rows):
       list(rows)
+    }
+  }
+  
+  private func noContent(_ error: (any Error)?) -> some View {
+    ContentUnavailableView {
+      if error == nil {
+        Label("No tokens found", systemImage: "dog.circle.fill")
+      } else {
+        Label("Can't load tokens", systemImage: "exclamationmark.icloud.fill")
+      }
+    } description: {
+      VStack(spacing: 20) {
+        if let desc = error?.localizedDescription {
+          Text(desc)
+        }
+        Button("Retry") {
+          Task {
+            await viewModel.loadDataTask()
+          }
+        }
+        .buttonStyle(.borderedProminent)
+      }
     }
   }
   
@@ -66,6 +85,10 @@ class MockTokenListViewModel: TokenListViewModelProtocol {
 
 #Preview("Loading") {
   SpotRootView(viewModel: MockTokenListViewModel(content: .loading))
+}
+
+#Preview("Empty") {
+  SpotRootView(viewModel: MockTokenListViewModel(content: .empty))
 }
 
 #Preview("Error") {
